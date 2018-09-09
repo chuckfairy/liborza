@@ -9,6 +9,8 @@ CTestTestfile.cmake
 CMakeScripts
 compile_commands.json
 
+build
+
 CPack*
 
 doc/
