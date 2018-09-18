@@ -20,12 +20,12 @@ namespace Util {
 
 class Event {
 
-    public:
+	public:
 
-        Event() {};
-        ~Event() {};
+		Event() {};
+		~Event() {};
 
-        virtual void run( void * p ) {};
+		virtual void run( void * p ) {};
 
 };
 
@@ -36,71 +36,71 @@ class Event {
 
 class Dispatcher {
 
-    protected:
+	protected:
 
-        /**
-         * Main events
-         */
+		/**
+		 * Main events
+		 */
 
-        map<const char *, vector<Event*> *> _events;
-
-
-    public:
-
-        /**
-         * Set an event handler mapped
-         *
-         */
-
-        void on( const char * event, Event * e ) {
-
-            if( ! hasEvents( event ) ) {
-
-                _events[ event ] = new vector<Event*>;
-
-            };
-
-            _events[ event ]->push_back( e );
-
-        };
+		map<const char *, vector<Event*> *> _events;
 
 
-        /**
-         * Dispatch mapped event
-         *
-         */
+	public:
 
-        void dispatch( const char * event, void * data ) {
+		/**
+		 * Set an event handler mapped
+		 *
+		 */
 
-            if( ! hasEvents( event ) ) {
+		void on( const char * event, Event * e ) {
 
-                return;
+			if( ! hasEvents( event ) ) {
 
-            };
+				_events[ event ] = new vector<Event*>;
 
-            vector<Event*> mapEvents = * _events[ event ];
+			};
 
-            vector<Event*>::iterator it;
+			_events[ event ]->push_back( e );
 
-            for( it = mapEvents.begin(); it != mapEvents.end(); ++ it ) {
-
-                (*it)->run( data );
-
-            }
-
-        };
+		};
 
 
-        /**
-         * Event been found
-         *
-         */
+		/**
+		 * Dispatch mapped event
+		 *
+		 */
 
-        bool hasEvents( const char * event ) {
+		void dispatch( const char * event, void * data ) {
 
-            return ( _events.find( event ) != _events.end() );
+			if( ! hasEvents( event ) ) {
 
-        };
+				return;
+
+			};
+
+			vector<Event*> mapEvents = * _events[ event ];
+
+			vector<Event*>::iterator it;
+
+			for( it = mapEvents.begin(); it != mapEvents.end(); ++ it ) {
+
+				(*it)->run( data );
+
+			}
+
+		};
+
+
+		/**
+		 * Event been found
+		 *
+		 */
+
+		bool hasEvents( const char * event ) {
+
+			return ( _events.find( event ) != _events.end() );
+
+		};
 
 };
 
