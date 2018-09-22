@@ -15,6 +15,7 @@
 #include <Audio/Server.h>
 #include "Host.h"
 #include "Patchbay.h"
+#include "Resource/Client.h"
 
 
 namespace Jack {
@@ -33,168 +34,182 @@ class Midi;
 
 class Server : public Audio::Server {
 
-    private:
+	private:
 
-        jack_options_t JACK_OPTIONS = JackNullOption;
+		jack_options_t JACK_OPTIONS = JackNullOption;
 
-        jack_status_t JACK_STATUS;
+		jack_status_t JACK_STATUS;
 
 
-        /**
-         * Jack input port
-         */
+		/**
+		 * Jack input port
+		 */
 
-        jack_port_t * _inputPort;
+		jack_port_t * _inputPort;
 
 
-        /**
-         * Jack input port
-         */
+		/**
+		 * Jack input port
+		 */
 
-        jack_port_t * _outputPort;
+		jack_port_t * _outputPort;
 
 
-        /**
-         * Jack client pointer
-         */
+		/**
+		 * Jack client pointer
+		 */
 
-        jack_client_t * _client = 0;
+		jack_client_t * _client = 0;
 
 
-        /**
-         * Audio module
-         *
-         */
+		/**
+		 * Audio module
+		 *
+		 */
 
-        Host * _Audio;
+		Host * _Audio;
 
 
-        /**
-         * Midi connectors
-         */
+		/**
+		 * Midi connectors
+		 */
 
-        Midi * _Midi;
+		Midi * _Midi;
 
 
-        /**
-         * LV2
-         * @TODO rename to more patchbay
-         */
+		/**
+		 * LV2
+		 * @TODO rename to more patchbay
+		 */
 
-        Jack::Patchbay * _Host;
+		Jack::Patchbay * _Host;
 
 
-    protected:
+	protected:
 
-        const char * _name = "orzabal";
-        const char * _clientName = "orzabal-client";
+		const char * _name = "orzabal";
+		const char * _clientName = "orzabal-client";
 
 
-    public:
+	public:
 
-        Server();
+		Server();
 
-        void start();
+		void start();
 
-        void run();
+		void run();
 
-        void stop();
+		void stop();
 
-        bool connect();
+		bool connect();
 
-        void getPorts();
+		void getPorts();
 
-        void connectDefault();
+		void connectDefault();
 
 
-        /**
-         * Event specific
-         */
+		/**
+		 * Event specific
+		 */
 
-        static const char * JACK_CLIENT_NAME;
+		static const char * JACK_CLIENT_NAME;
 
-        static const char * UPDATE_EVENT;
-        static const char * SHUTDOWN_EVENT;
-        static const char * LATENCY_EVENT;
-        static const char * BUFFER_SIZE_EVENT;
-        static const char * PORT_REGISTER_EVENT;
+		static const char * UPDATE_EVENT;
+		static const char * SHUTDOWN_EVENT;
+		static const char * LATENCY_EVENT;
+		static const char * BUFFER_SIZE_EVENT;
+		static const char * PORT_REGISTER_EVENT;
 
 
-        /**
-         * Get jack status
-         *
-         */
+		/**
+		 * Get jack status
+		 *
+		 */
 
-        jack_status_t * getJackStatus() {
+		jack_status_t * getJackStatus() {
 
-            return &JACK_STATUS;
+			return &JACK_STATUS;
 
-        };
+		};
 
 
-        /**
-         * Get jack client pointer
-         *
-         */
+		/**
+		 * Get jack client pointer
+		 *
+		 */
 
-        jack_client_t * getJackClient() {
+		jack_client_t * getJackClient() {
 
-            return _client;
+			return _client;
 
-        };
+		};
 
 
-        /**
-         * Get Audio host
-         *
-         */
+		/**
+		 * Get Audio host
+		 *
+		 */
 
-        Jack::Host * getAudio() {
+		Jack::Host * getAudio() {
 
-            return _Audio;
+			return _Audio;
 
-        };
+		};
 
-        /**
-         * Getter audio modules
-         */
+		/**
+		 * Getter audio modules
+		 */
 
-        Midi * getMidi();
+		Midi * getMidi();
 
-        Jack::Patchbay * getPatchbay();
+		Jack::Patchbay * getPatchbay();
 
 
-        /**
-         * Port regsiter of started server
-         */
+		/**
+		 * Port regsiter of started server
+		 */
 
-        void JackRegisterPorts();
+		void JackRegisterPorts();
 
 
-        /**
-         * Jack process functionsc
-         *
-         */
+		/**
+		 * Jack client getters
+		 */
+		int getSampleRate() {
 
-        static int JackProcess( jack_nframes_t, void * );
+			return Jack::Resource::Client::getSampleRate( _client );
 
-        static int JackOnBufferSize( jack_nframes_t, void * );
+		};
 
-        static void JackOnLatency( jack_latency_callback_mode_t, void * );
 
-        static void JackOnShutdown( void *o );
+	//block_length = Jack::Resource::Client::getBufferSize( _jackClient );
 
-        static void JackOnPortConnect( void *o );
+	//midi_buf_size = Jack::Resource::Client::getMidiBufferSize( _jackClient );
 
+		/**
+		 * Jack process functionsc
+		 *
+		 */
 
-        /**
-         * Port registered or unregistered
-         *
-         * see JackPortRegistrationCallback
-         *
-         */
+		static int JackProcess( jack_nframes_t, void * );
 
-        static void JackOnPortResgistration( jack_port_id_t, int, void * );
+		static int JackOnBufferSize( jack_nframes_t, void * );
+
+		static void JackOnLatency( jack_latency_callback_mode_t, void * );
+
+		static void JackOnShutdown( void *o );
+
+		static void JackOnPortConnect( void *o );
+
+
+		/**
+		 * Port registered or unregistered
+		 *
+		 * see JackPortRegistrationCallback
+		 *
+		 */
+
+		static void JackOnPortResgistration( jack_port_id_t, int, void * );
 
 };
 

@@ -78,13 +78,11 @@ class Dispatcher {
 
 			};
 
-			vector<Event*> mapEvents = * _events[ event ];
+			vector<Event*> * mapEvents = _events[ event ];
 
-			vector<Event*>::iterator it;
+			for( int i = 0; i < mapEvents->size(); ++ i ) {
 
-			for( it = mapEvents.begin(); it != mapEvents.end(); ++ it ) {
-
-				(*it)->run( data );
+				mapEvents->at( i )->run( data );
 
 			}
 
