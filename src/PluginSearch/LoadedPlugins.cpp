@@ -70,6 +70,25 @@ void LoadedPlugins::load() {
 
 
 /**
+ * Get singleton
+ */
+
+LoadedPlugins * LoadedPlugins::RESOURCE = nullptr;
+
+LoadedPlugins * LoadedPlugins::getInstance() {
+
+    if( RESOURCE == nullptr ) {
+
+        RESOURCE = new LoadedPlugins();
+
+    }
+
+    return RESOURCE;
+
+};
+
+
+/**
  * Main updaet
  */
 

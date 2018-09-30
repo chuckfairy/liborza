@@ -12,11 +12,6 @@
 
 namespace LV2 {
 
-/**
- * Class forwarding
- */
-class UI;
-
 
 /**
  * LV2 Port

@@ -10,12 +10,12 @@ find_package(PkgConfig)
 if( NOT SERD_INCLUDE_DIRS )
 
     set(SERD_INCLUDE_DIRS
-      "${ORZABAL_ROOT_PATH}/lib-src/serd/src"
-      "${ORZABAL_ROOT_PATH}/lib-src/serd"
+      "${LIBORZA_ROOT_PATH}/lib-src/serd/src"
+      "${LIBORZA_ROOT_PATH}/lib-src/serd"
     )
 
     set(SERD_INCLUDE_FILES
-        "${ORZABAL_ROOT_PATH}/lib-src/serd/src/*.c"
+        "${LIBORZA_ROOT_PATH}/lib-src/serd/src/*.c"
     )
 
     message( "${SERD_INCLUDE_DIR}" )

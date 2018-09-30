@@ -19,9 +19,8 @@ find_package( Serd REQUIRED )
 find_package( Suil REQUIRED )
 find_package( Sratom REQUIRED )
 
-#find_package(Lv2)
-#find_package(Lilv)
 
+message( "${LIBORZA_ROOT_PATH}/lib-src/lilv/src/" )
 
 #set( LIBORZA_LV2_INCLUDE_FILES )
 file( GLOB LIBORZA_LV2_INCLUDE_FILES

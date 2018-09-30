@@ -10,13 +10,13 @@ find_package(PkgConfig)
 if( NOT LILV_INCLUDE_DIRS )
 
     set(LILV_INCLUDE_DIRS
-      "${ORZABAL_ROOT_PATH}/lib-src/lilv/src"
-      "${ORZABAL_ROOT_PATH}/lib-src/lilv"
+      "${LIBORZA_ROOT_PATH}/lib-src/lilv/src"
+      "${LIBORZA_ROOT_PATH}/lib-src/lilv"
     )
 
     set(LILV_INCLUDE_FILES
-      "${ORZABAL_ROOT_PATH}/lib-src/lilv/src/*.c"
-      "${ORZABAL_ROOT_PATH}/lib-src/lilv/src/zix/*.c"
+      "${LIBORZA_ROOT_PATH}/lib-src/lilv/src/*.c"
+      "${LIBORZA_ROOT_PATH}/lib-src/lilv/src/zix/*.c"
     )
 
     message( "${LILV_INCLUDE_DIR}" )

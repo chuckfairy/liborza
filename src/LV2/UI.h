@@ -13,6 +13,8 @@
 #include <Audio/UI.h>
 #include <Audio/UIDriver.h>
 
+#include "Port.h"
+
 #include "include/types.h"
 
 
@@ -25,8 +27,6 @@ namespace LV2 {
  */
 
 class Plugin;
-
-class Port;
 
 class PresetDropdown;
 

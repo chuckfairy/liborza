@@ -10,11 +10,11 @@ find_package(PkgConfig)
 if( NOT SRATOM_INCLUDE_DIRS )
 
     set(SRATOM_INCLUDE_DIRS
-      "${ORZABAL_ROOT_PATH}/lib-src/sratom"
+      "${LIBORZA_ROOT_PATH}/lib-src/sratom"
     )
 
     set(SRATOM_INCLUDE_FILES
-      "${ORZABAL_ROOT_PATH}/lib-src/sratom/src/*.c"
+      "${LIBORZA_ROOT_PATH}/lib-src/sratom/src/*.c"
     )
 
     message( "${SRATOM_INCLUDE_DIR}" )

@@ -34,6 +34,8 @@ class LoadedPlugins {
 
         static void addSearch( Audio::Search * );
 
+        static LoadedPlugins * getInstance();
+
 
         /**
          * Class methods
@@ -61,6 +63,8 @@ class LoadedPlugins {
         static vector<Audio::Plugin*> ALL_PLUGINS;
 
         static vector<Audio::Search*> PLUGIN_SEARCHS;
+
+        static LoadedPlugins * RESOURCE;
 
 };
 

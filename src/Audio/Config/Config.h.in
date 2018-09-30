@@ -9,6 +9,6 @@ namespace Audio { namespace Config {
  * File directory config
  */
 
-static const char * DataDirectory = "${ORZABAL_DATA_PATH}";
+static const char * DataDirectory = "${ORZA_DATA_PATH}";
 
 }; };

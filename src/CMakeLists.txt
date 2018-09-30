@@ -3,6 +3,9 @@ project(liborza-common CXX)
 
 
 # Main config
+
+set( ORZA_DATA_PATH "../data" )
+
 configure_file(Config/Config.h.in Config/Config.h)
 
 configure_file(Config/PluginTypes.h.in Config/PluginTypes.h)

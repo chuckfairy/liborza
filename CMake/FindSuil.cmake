@@ -10,15 +10,15 @@ find_package(PkgConfig)
 if( NOT SUIL_INCLUDE_DIRS )
 
     set(SUIL_INCLUDE_DIRS
-      "${ORZABAL_ROOT_PATH}/lib-src/suil/src"
-      "${ORZABAL_ROOT_PATH}/lib-src/suil"
+      "${LIBORZA_ROOT_PATH}/lib-src/suil/src"
+      "${LIBORZA_ROOT_PATH}/lib-src/suil"
       "/usr/include/gtk-2.0"
     )
 
     set(SUIL_INCLUDE_FILES
-      "${ORZABAL_ROOT_PATH}/lib-src/suil/src/host.c"
-      "${ORZABAL_ROOT_PATH}/lib-src/suil/src/instance.c"
-      "${ORZABAL_ROOT_PATH}/lib-src/suil/src/x11_in_qt5.cpp"
+      "${LIBORZA_ROOT_PATH}/lib-src/suil/src/host.c"
+      "${LIBORZA_ROOT_PATH}/lib-src/suil/src/instance.c"
+      "${LIBORZA_ROOT_PATH}/lib-src/suil/src/x11_in_qt5.cpp"
     )
 
     message( "${SUIL_INCLUDE_DIR}" )

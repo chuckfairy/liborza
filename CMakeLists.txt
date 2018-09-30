@@ -1,6 +1,6 @@
 # Jack cmake
 
-project( liborza CXX )
+project( liborza LANGUAGES CXX C )
 
 cmake_minimum_required( VERSION 2.7 )
 
