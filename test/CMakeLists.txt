@@ -64,6 +64,7 @@ foreach(testSrc ${TEST_SRCS})
         "${LIBORZA_ROOT_PATH}/lib-src"
         "${LIBORZA_ROOT_PATH}/lib-src/sratom"
         "${LIBORZA_ROOT_PATH}/lib-src/sord"
+        "${CMAKE_CURRENT_BINARY_DIR}/../src"
     )
 
     #I like to move testing binaries into a testBin directory

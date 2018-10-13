@@ -26,6 +26,8 @@ set( LIBORZA_MIDI_NAMES_DEFINITION "" )
 set( LIBORZA_MIDI_NAMES_ARRAY "" )
 set( LIBORZA_MIDI_NAME_LAST "" )
 
+set( LIBORZA_MIDI_LABELS "" )
+
 foreach( octave RANGE 10 )
 
     # midi name
@@ -35,6 +37,8 @@ foreach( octave RANGE 10 )
         # Name def
 
         set( note_name "${midi_name}${octave}" )
+
+        set( LIBORZA_MIDI_LABELS "${LIBORZA_MIDI_LABELS}\n\t\"${note_name}\"," )
 
         if( ${counter} MATCHES "${LIBORZA_MIDI_NUMBER_MAX}" )
             break()
@@ -60,6 +64,13 @@ configure_file( Note.h.in Note.h)
 set( LIBORZA_FREQUENCY_DEFAULT_A4 "440" )
 
 configure_file( Config/Frequency.h.in Config/Frequency.h)
+
+
+include_directories(
+	"${CMAKE_CURRENT_BINARY_DIR}"
+)
+
+
 
 
 # Midi Control config

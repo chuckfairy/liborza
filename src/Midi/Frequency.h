@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Config/Frequency.h"
-#include "Note.h"
+#include <Midi/Note.h>
 
 namespace Orza { namespace Midi { namespace Frequency {
 
