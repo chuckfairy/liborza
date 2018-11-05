@@ -68,7 +68,7 @@ class Repository : public Dispatcher {
 
                 for( it = items.begin(); it != items.end(); ++ it ) {
 
-                    Param * p = (*it);
+                    Param * p = (Param*)(*it);
 
                     output.push_back( p );
 

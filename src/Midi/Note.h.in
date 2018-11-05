@@ -44,7 +44,7 @@ static const char * NOTE_NAMES[${counter}] = {${LIBORZA_MIDI_LABELS}
  * Note number
  */
 
-NoteNumber getNoteOctave( enum NoteNumber note ) {
+static NoteNumber getNoteOctave( enum NoteNumber note ) {
 
     return (NoteNumber) floor( ( note - NOTE_MIN ) / 12 );
 
