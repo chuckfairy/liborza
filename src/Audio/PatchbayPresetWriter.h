@@ -10,7 +10,7 @@
 #include <Util/JSON.h>
 #include <Util/File.h>
 
-#include "Config/Config.h"
+#include <Audio/Config/Config.h>
 #include "Plugin.h"
 
 
