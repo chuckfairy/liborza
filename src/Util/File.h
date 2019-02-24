@@ -22,19 +22,19 @@ namespace Util { namespace File {
 
 inline string getContents( const char * const fileName ) {
 
-    std::ifstream t( fileName );
-    string str;
+	std::ifstream t( fileName );
+	string str;
 
-    t.seekg(0, std::ios::end);
-    str.reserve(t.tellg());
-    t.seekg(0, std::ios::beg);
+	t.seekg(0, std::ios::end);
+	str.reserve(t.tellg());
+	t.seekg(0, std::ios::beg);
 
-    str.assign(
-        (std::istreambuf_iterator<char>(t)),
-        std::istreambuf_iterator<char>()
-    );
+	str.assign(
+			(std::istreambuf_iterator<char>(t)),
+			std::istreambuf_iterator<char>()
+			);
 
-    return str;
+	return str;
 
 };
 
@@ -45,11 +45,11 @@ inline string getContents( const char * const fileName ) {
 
 inline void setContents( const char * const fileName, string input ) {
 
-    std::ofstream out( fileName );
+	std::ofstream out( fileName );
 
-    out << input;
+	out << input;
 
-    out.close();
+	out.close();
 
 };
 
@@ -58,19 +58,19 @@ inline void setContents( const char * const fileName, string input ) {
 
 inline glob_t getGlob( const char * const searcher ) {
 
-    glob_t buf;
+	glob_t buf;
 
-    int err = glob( searcher, GLOB_TILDE, NULL, &buf );
+	int err = glob( searcher, GLOB_TILDE, NULL, &buf );
 
-    if( err == 0 && false ) {
+	if( err == 0 && false ) {
 
-        throw std::runtime_error(
-            "Glob search failed"
-        );
+		throw std::runtime_error(
+				"Glob search failed"
+				);
 
-    }
+	}
 
-    return buf;
+	return buf;
 
 };
 
@@ -81,19 +81,19 @@ inline glob_t getGlob( const char * const searcher ) {
 
 inline string basenameOf( const string& from, const string& to ) {
 
-    string str( to );
+	string str( to );
 
-    size_t start_pos = str.find( from );
+	size_t start_pos = str.find( from );
 
-    if( start_pos == string::npos ) {
+	if( start_pos == string::npos ) {
 
-        return str;
+		return str;
 
-    }
+	}
 
-    str.replace( start_pos, from.length(), "" );
+	str.replace( start_pos, from.length(), "" );
 
-    return str;
+	return str;
 
 };
 
