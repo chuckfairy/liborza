@@ -19,13 +19,14 @@
 using std::vector;
 
 using Audio::Plugin;
+using Audio::Search;
 
 
 namespace Orza { namespace PluginSearch {
 
-vector<Audio::Plugin*> LoadedPlugins::ALL_PLUGINS;
+vector<Plugin*> LoadedPlugins::ALL_PLUGINS;
 
-vector<Audio::Search*> LoadedPlugins::PLUGIN_SEARCHS;
+vector<Search*> LoadedPlugins::PLUGIN_SEARCHS;
 
 /**
  * API
@@ -37,13 +38,13 @@ vector<Audio::Plugin*> LoadedPlugins::getAllGlobal() {
 
 };
 
-vector<Audio::Search*> LoadedPlugins::getAllSearches() {
+vector<Search*> LoadedPlugins::getAllSearches() {
 
 	return LoadedPlugins::PLUGIN_SEARCHS;
 
 };
 
-void LoadedPlugins::addSearch( Audio::Search * s ) {
+void LoadedPlugins::addSearch( Search * s ) {
 
 	LoadedPlugins::PLUGIN_SEARCHS.push_back( s );
 
@@ -58,9 +59,9 @@ void LoadedPlugins::load() {
 
 #if ORZABAL_HAS_LV2
 
-	LV2::Search * LV2_PLUGIN = new LV2::Search();
+	::LV2::Search * LV2_PLUGIN = new ::LV2::Search();
 
-	LoadedPlugins::addSearch( (Audio::Search*) LV2_PLUGIN );
+	LoadedPlugins::addSearch( (Search*) LV2_PLUGIN );
 
 #endif
 
@@ -98,7 +99,7 @@ void LoadedPlugins::update() {
 
 	ALL_PLUGINS.clear();
 
-	vector<Audio::Search*>::iterator it;
+	vector<Search*>::iterator it;
 
 	for( it = PLUGIN_SEARCHS.begin(); it != PLUGIN_SEARCHS.end(); ++it ) {
 
