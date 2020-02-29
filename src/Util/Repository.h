@@ -37,7 +37,9 @@ class Repository : public Dispatcher {
          * Virtual class
          */
 
-        Repository() {};
+        Repository() :
+			_items()
+		{};
         ~Repository() {};
 
 

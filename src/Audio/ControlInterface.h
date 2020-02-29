@@ -7,44 +7,49 @@ namespace Audio {
 
 class ControlInterface {
 
-    public:
+	public:
 
-        /**
-         * Virtual override methods
-         */
+		/**
+		 * Virtual override methods
+		 */
 
-        virtual void start() {};
-        virtual void stop() {};
-        virtual void run() {};
-        virtual void pause() {};
+		virtual void start() {};
+		virtual void stop() {};
+		virtual void run() {};
+		virtual void pause() {};
 
-
-        /**
-         * Main active use methods
-         */
-
-        bool isActive() {
-
-            return ACTIVE;
-
-        };
-
-        void setActive( bool now ) {
-
-            ACTIVE = now;
-
-        };
+		/**
+		 * IO based
+		 */
+		virtual void clearInputs() {};
 
 
-    protected:
+		/**
+		 * Main active use methods
+		 */
 
-        ControlInterface() {};
-        ~ControlInterface() {};
+		bool isActive() {
+
+			return ACTIVE;
+
+		};
+
+		void setActive( bool now ) {
+
+			ACTIVE = now;
+
+		};
 
 
-    private:
+	protected:
 
-        bool ACTIVE = false;
+		ControlInterface() {};
+		~ControlInterface() {};
+
+
+	private:
+
+		bool ACTIVE = false;
 
 };
 

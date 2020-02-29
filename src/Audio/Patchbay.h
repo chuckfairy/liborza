@@ -6,6 +6,7 @@
 
 #include "Host.h"
 #include "Plugin.h"
+#include "PatchbayEffects.h"
 
 
 namespace Audio {
@@ -21,6 +22,14 @@ class Patchbay : public Host {
 
         };
 
+        /**
+         * Audio Effects
+         */
+
+        PatchbayEffects * getEffects() {
+			return _PatchbayEffects;
+		}
+
 
     protected:
 
@@ -29,6 +38,13 @@ class Patchbay : public Host {
         vector<Plugin*> _ActivePlugins;
 
         vector<Plugin*> _ActiveEffects;
+
+
+        /**
+         * Patchbay effects rack
+         */
+
+        PatchbayEffects * _PatchbayEffects;
 
 };
 

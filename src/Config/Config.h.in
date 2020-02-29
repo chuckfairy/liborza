@@ -7,4 +7,6 @@ namespace Orza { namespace Config {
 
 const char * VERSION = "${ORZABAL_VERSION}";
 
+//const char * DataDirectory = "${ORZA_DATA_PATH}";
+
 }; };

@@ -17,15 +17,15 @@ namespace Jack {
  */
 
 PatchbayEffects::PatchbayEffects( Server * server ) :
-    StereoHostInterface( server->getJackClient() ),
-    _Server( server ),
-    _Output( new PatchbayEffectsOutput( server->getJackClient() ) ),
-    _Repo( new PluginRepository )
+	StereoHostInterface( server->getJackClient() ),
+	_Server( server ),
+	_Output( new PatchbayEffectsOutput( server->getJackClient() ) ),
+	::Audio::PatchbayEffects()
 {
 
-    createPorts();
+	createPorts();
 
-    connectEffectPorts();
+	connectEffectPorts();
 
 };
 
@@ -36,17 +36,17 @@ PatchbayEffects::PatchbayEffects( Server * server ) :
 
 void PatchbayEffects::addEffect( Audio::Plugin * p ) {
 
-    setActive( false );
+	setActive( false );
 
-    p->start();
+	p->start();
 
-    p->run();
+	p->run();
 
-    _Repo->add( (Plugin*) p );
+	_Repo->add( (Plugin*) p );
 
-    setActive( true );
+	setActive( true );
 
-    connectEffectPorts();
+	connectEffectPorts();
 
 };
 
@@ -57,11 +57,11 @@ void PatchbayEffects::addEffect( Audio::Plugin * p ) {
 
 void PatchbayEffects::removeEffect( Audio::Plugin * p ) {
 
-    _Repo->remove( (Plugin*) p );
+	_Repo->remove( (Plugin*) p );
 
-    p->stop();
+	p->stop();
 
-    connectEffectPorts();
+	connectEffectPorts();
 
 };
 
@@ -72,9 +72,9 @@ void PatchbayEffects::removeEffect( Audio::Plugin * p ) {
 
 void PatchbayEffects::pauseEffect( Audio::Plugin * p ) {
 
-    p->pause();
+	p->pause();
 
-    connectEffectPorts();
+	connectEffectPorts();
 
 };
 
@@ -84,23 +84,23 @@ void PatchbayEffects::pauseEffect( Audio::Plugin * p ) {
 
 vector<Audio::Port*> PatchbayEffects::getControlPorts() {
 
-    vector<Audio::Port*> ports;
+	vector<Audio::Port*> ports;
 
-    vector<Plugin*>::iterator it;
+	vector<Plugin*>::iterator it;
 
-    vector<Plugin*> _ActiveEffects = _Repo->getAll();
+	vector<Plugin*> _ActiveEffects = _Repo->getAll<Plugin>();
 
-    for( it = _ActiveEffects.begin(); it != _ActiveEffects.end(); ++ it ) {
+	for( it = _ActiveEffects.begin(); it != _ActiveEffects.end(); ++ it ) {
 
-        Audio::Plugin * p = (Audio::Plugin*) (*it);
+		Audio::Plugin * p = (Audio::Plugin*) (*it);
 
-        vector<Audio::Port*> pluginPorts = p->getPortsFromIndex( p->getControlPorts() );
+		vector<Audio::Port*> pluginPorts = p->getPortsFromIndex( p->getControlPorts() );
 
-        Util::Vector::append( &ports, pluginPorts );
+		Util::Vector::append( &ports, pluginPorts );
 
-    };
+	};
 
-    return ports;
+	return ports;
 
 }
 
@@ -111,107 +111,107 @@ vector<Audio::Port*> PatchbayEffects::getControlPorts() {
 
 void PatchbayEffects::connectEffectPorts() {
 
-    //Disconnect redirector
+	//Disconnect redirector
 
-    vector<jack_port_t*> * patchbayOutInputs = _Output->getInputPorts();
+	vector<jack_port_t*> * patchbayOutInputs = _Output->getInputPorts();
 
-    disconnectJackPort( _outputLeft );
-    disconnectJackPort( _outputRight );
+	disconnectJackPort( _outputLeft );
+	disconnectJackPort( _outputRight );
 
-    disconnectJackPort(  patchbayOutInputs->at( 0 ) );
-    disconnectJackPort( patchbayOutInputs->at( 1 ) );
-
-
-    //If empty just redirect to output
-
-    if ( _Repo->empty() ) {
-
-        connectOutputTo(
-           _Output->getInputNameLeft(),
-           _Output->getInputNameRight()
-        );
-
-        return;
-
-    }
+	disconnectJackPort(  patchbayOutInputs->at( 0 ) );
+	disconnectJackPort( patchbayOutInputs->at( 1 ) );
 
 
-    //Disconnect all previous connections
+	//If empty just redirect to output
 
-    disconnectEffectPorts();
+	if ( _Repo->empty() ) {
 
+		connectOutputTo(
+		   _Output->getInputNameLeft(),
+		   _Output->getInputNameRight()
+		);
 
-    //Connect chain
+		return;
 
-    vector<Plugin*> _ActiveEffects = _Repo->getAll();
-
-    vector<Plugin*>::iterator it;
-
-    bool isFirst = true;
-
-    Plugin * lastPlugin = nullptr;
-
-    for( it = _ActiveEffects.begin(); it != _ActiveEffects.end(); ++ it ) {
-
-        Plugin * p = (Plugin*) (*it);
-
-        if( ! p->isActive() ) { continue; }
+	}
 
 
-        //Get ports
+	//Disconnect all previous connections
 
-        vector<jack_port_t*> inputs = p->getInputJackPorts();
-        vector<jack_port_t*> outputs = p->getOutputJackPorts();
+	disconnectEffectPorts();
 
 
-        //First one connect to internal out
+	//Connect chain
 
-        if( isFirst ) {
+	vector<Plugin*> _ActiveEffects = _Repo->getAll<Plugin>();
 
-            connectOutputTo(
-                jack_port_name( inputs[0] ),
-                jack_port_name( inputs[1] )
-            );
+	vector<Plugin*>::iterator it;
 
-            isFirst = false;
+	bool isFirst = true;
 
-        } else {
+	Plugin * lastPlugin = nullptr;
 
-            vector<jack_port_t*> lastOutputs = lastPlugin->getOutputJackPorts();
+	for( it = _ActiveEffects.begin(); it != _ActiveEffects.end(); ++ it ) {
 
-            connectJackPort(
-                jack_port_name( lastOutputs[0] ),
-                jack_port_name( inputs[0] )
-            );
+		Plugin * p = (Plugin*) (*it);
 
-            connectJackPort(
-                jack_port_name( lastOutputs[1] ),
-                jack_port_name( inputs[1] )
-            );
+		if( ! p->isActive() ) { continue; }
 
-        }
 
-        lastPlugin = p;
+		//Get ports
 
-    }
+		vector<jack_port_t*> inputs = p->getInputJackPorts();
+		vector<jack_port_t*> outputs = p->getOutputJackPorts();
 
-    if( lastPlugin != nullptr ) {
 
-        vector<jack_port_t*> outputs = lastPlugin->getOutputJackPorts();
+		//First one connect to internal out
 
-        _Output->connectInputTo(
-            jack_port_name( outputs[0] ),
-            jack_port_name( outputs[1] )
-        );
+		if( isFirst ) {
 
-    } else {
+			connectOutputTo(
+				jack_port_name( inputs[0] ),
+				jack_port_name( inputs[1] )
+			);
 
-        connectOutputTo(
-           _Output->getInputNameLeft(),
-           _Output->getInputNameRight()
-        );
+			isFirst = false;
 
-    }
+		} else {
+
+			vector<jack_port_t*> lastOutputs = lastPlugin->getOutputJackPorts();
+
+			connectJackPort(
+				jack_port_name( lastOutputs[0] ),
+				jack_port_name( inputs[0] )
+			);
+
+			connectJackPort(
+				jack_port_name( lastOutputs[1] ),
+				jack_port_name( inputs[1] )
+			);
+
+		}
+
+		lastPlugin = p;
+
+	}
+
+	if( lastPlugin != nullptr ) {
+
+		vector<jack_port_t*> outputs = lastPlugin->getOutputJackPorts();
+
+		_Output->connectInputTo(
+			jack_port_name( outputs[0] ),
+			jack_port_name( outputs[1] )
+		);
+
+	} else {
+
+		connectOutputTo(
+		   _Output->getInputNameLeft(),
+		   _Output->getInputNameRight()
+		);
+
+	}
 
 };
 
@@ -222,30 +222,30 @@ void PatchbayEffects::connectEffectPorts() {
 
 void PatchbayEffects::disconnectEffectPorts() {
 
-    //Connect chain
+	//Connect chain
 
-    vector<Plugin*>::iterator it;
+	vector<Plugin*>::iterator it;
 
-    vector<Plugin*> _ActiveEffects = _Repo->getAll();
+	vector<Plugin*> _ActiveEffects = _Repo->getAll<Plugin>();
 
-    for( it = _ActiveEffects.begin(); it != _ActiveEffects.end(); ++ it ) {
+	for( it = _ActiveEffects.begin(); it != _ActiveEffects.end(); ++ it ) {
 
-        Plugin * p = (*it);
+		Plugin * p = (*it);
 
-        if( ! p->isActive() ) { continue; }
+		if( ! p->isActive() ) { continue; }
 
 
-        //Get ports and disconnect
+		//Get ports and disconnect
 
-        vector<jack_port_t*> inputs = p->getInputJackPorts();
-        vector<jack_port_t*> outputs = p->getOutputJackPorts();
+		vector<jack_port_t*> inputs = p->getInputJackPorts();
+		vector<jack_port_t*> outputs = p->getOutputJackPorts();
 
-        disconnectJackPort( inputs[0] );
-        disconnectJackPort( inputs[1] );
-        disconnectJackPort( outputs[0] );
-        disconnectJackPort( outputs[1] );
+		disconnectJackPort( inputs[0] );
+		disconnectJackPort( inputs[1] );
+		disconnectJackPort( outputs[0] );
+		disconnectJackPort( outputs[1] );
 
-    }
+	}
 
 };
 
@@ -256,23 +256,23 @@ void PatchbayEffects::disconnectEffectPorts() {
 
 void PatchbayEffects::updateJack( jack_nframes_t nframes ) {
 
-    if( ! isActive() ) { return; }
+	if( ! isActive() ) { return; }
 
-    vector<Plugin*>::iterator it;
+	vector<Plugin*>::iterator it;
 
-    vector<Plugin*> _ActiveEffects = _Repo->getAll();
+	vector<Plugin*> _ActiveEffects = _Repo->getAll<Plugin>();
 
-    for( it = _ActiveEffects.begin(); it != _ActiveEffects.end(); ++ it ) {
+	for( it = _ActiveEffects.begin(); it != _ActiveEffects.end(); ++ it ) {
 
-        Plugin * p = (Plugin*) (*it);
+		Plugin * p = (Plugin*) (*it);
 
-        if( p->isActive() ) {
+		if( p->isActive() ) {
 
-            p->updateJack( nframes );
+			p->updateJack( nframes );
 
-        }
+		}
 
-    }
+	}
 
 };
 
@@ -283,21 +283,21 @@ void PatchbayEffects::updateJack( jack_nframes_t nframes ) {
 
 void PatchbayEffects::updateJackBufferSize( jack_nframes_t frames ) {
 
-    vector<Plugin*>::iterator it;
+	vector<Plugin*>::iterator it;
 
-    vector<Plugin*> effects = _Repo->getAll();
+	vector<Plugin*> effects = _Repo->getAll<Plugin>();
 
-    for( it = effects.begin(); it != effects.end(); ++ it ) {
+	for( it = effects.begin(); it != effects.end(); ++ it ) {
 
-        Plugin * p = (*it);
+		Plugin * p = (*it);
 
-        if( p->isActive() ) {
+		if( p->isActive() ) {
 
-            p->updateJackBufferSize( frames );
+			p->updateJackBufferSize( frames );
 
-        }
+		}
 
-    }
+	}
 
 };
 
@@ -308,21 +308,21 @@ void PatchbayEffects::updateJackBufferSize( jack_nframes_t frames ) {
 
 void PatchbayEffects::updateJackLatency( jack_latency_callback_mode_t mode ) {
 
-    vector<Plugin*>::iterator it;
+	vector<Plugin*>::iterator it;
 
-    vector<Plugin*> effects = _Repo->getAll();
+	vector<Plugin*> effects = _Repo->getAll<Plugin>();
 
-    for( it = effects.begin(); it != effects.end(); ++ it ) {
+	for( it = effects.begin(); it != effects.end(); ++ it ) {
 
-        Plugin * p = (*it);
+		Plugin * p = (*it);
 
-        if( p->isActive() ) {
+		if( p->isActive() ) {
 
-            p->updateJackLatency( mode );
+			p->updateJackLatency( mode );
 
-        }
+		}
 
-    }
+	}
 
 };
 
@@ -334,9 +334,9 @@ void PatchbayEffects::updateJackLatency( jack_latency_callback_mode_t mode ) {
 
 void PatchbayEffects::setServerCallbacks() {
 
-    Util::Event * e = new RedirectionEventStereo<PatchbayEffects>( this );
+	Util::Event * e = new RedirectionEventStereo<PatchbayEffects>( this );
 
-    _Server->on( Server::UPDATE_EVENT, e );
+	_Server->on( Server::UPDATE_EVENT, e );
 
 };
 
@@ -348,18 +348,18 @@ void PatchbayEffects::setServerCallbacks() {
 
 void PatchbayEffects::redirectInput( jack_nframes_t nframes ) {
 
-    StereoHostInterface::redirectInput( nframes );
+	StereoHostInterface::redirectInput( nframes );
 
-    //Redirect effects input to first effect
-    //and last input to main output
+	//Redirect effects input to first effect
+	//and last input to main output
 
-    if( ! _Repo->empty() ) {
+	if( ! _Repo->empty() ) {
 
-        redirectEffects( nframes );
+		redirectEffects( nframes );
 
-    }
+	}
 
-    _Output->redirectInput( nframes );
+	_Output->redirectInput( nframes );
 
 };
 
@@ -370,7 +370,12 @@ void PatchbayEffects::redirectInput( jack_nframes_t nframes ) {
 
 void PatchbayEffects::redirectEffects( jack_nframes_t nframes ) {
 
-    updateJack( nframes );
+	updateJack( nframes );
+
+};
+
+//@TODO
+void PatchbayEffects::clearEffects() {
 
 };
 

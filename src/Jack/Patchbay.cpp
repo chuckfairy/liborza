@@ -33,13 +33,14 @@ namespace Jack {
 
 Patchbay::Patchbay( Server * s ) :
     StereoHostInterface( s->getJackClient() ),
-    _Server( s ),
-    _PatchbayEffects( new PatchbayEffects( s ) )
+    _Server( s )
 {
+	_PatchbayEffects = new PatchbayEffects( s );
+	_JackEffects = (PatchbayEffects*) _PatchbayEffects;
 
     _Server->getAudio()->connectInputTo(
-        _PatchbayEffects->getPatchbayOutput()->getOutputNameLeft(),
-        _PatchbayEffects->getPatchbayOutput()->getOutputNameRight()
+        _JackEffects->getPatchbayOutput()->getOutputNameLeft(),
+        _JackEffects->getPatchbayOutput()->getOutputNameRight()
     );
 
     setServerCallbacks();
@@ -120,16 +121,6 @@ void Patchbay::clearPlugins() {
 
 
 /**
- * Effects list
- */
-
-PatchbayEffects * Patchbay::getEffects() {
-
-    return _PatchbayEffects;
-
-};
-
-/**
  * Get control ports for current plugins
  */
 
@@ -139,7 +130,7 @@ vector<Audio::Port*> Patchbay::getControlPorts() {
 
     Util::Vector::append( &ports, getInstrumentControlPorts() );
 
-    Util::Vector::append( &ports, _PatchbayEffects->getControlPorts() );
+    Util::Vector::append( &ports, _JackEffects->getControlPorts() );
 
     return ports;
 
@@ -213,7 +204,7 @@ vector<Audio::Plugin*> Patchbay::getAllPlugins() {
     vector<Audio::Plugin*> output;
 
     Util::Vector::append( &output, _ActivePlugins );
-    Util::Vector::append( &output, _PatchbayEffects->getRepo()->getAll<Audio::Plugin>() );
+    Util::Vector::append( &output, _JackEffects->getRepo()->getAll<Audio::Plugin>() );
 
     return output;
 
@@ -258,7 +249,7 @@ void Patchbay::connectPluginAudioPorts( Audio::Plugin * p ) {
             (*ports)[ 1 ]
         );
 
-        _PatchbayEffects->connectInputTo(
+        _JackEffects->connectInputTo(
             jack_port_name( portLeft->jack_port ),
             jack_port_name( portRight->jack_port )
         );
@@ -269,7 +260,7 @@ void Patchbay::connectPluginAudioPorts( Audio::Plugin * p ) {
             (*ports)[ 0 ]
         );
 
-        _PatchbayEffects->connectInputTo(
+        _JackEffects->connectInputTo(
             jack_port_name( portMono->jack_port )
         );
 
@@ -374,7 +365,7 @@ void Patchbay::updateJack( jack_nframes_t nframes ) {
 
     }
 
-    _PatchbayEffects->redirectInput( nframes );
+    _JackEffects->redirectInput( nframes );
 
 };
 
@@ -416,7 +407,7 @@ void Patchbay::updateJackBufferSize( void * bufferPtr ) {
 
     }
 
-    _PatchbayEffects->updateJackBufferSize( frames );
+    _JackEffects->updateJackBufferSize( frames );
 
 };
 
@@ -443,7 +434,7 @@ void Patchbay::updateJackLatency( void * modePtr ) {
 
     }
 
-    _PatchbayEffects->updateJackLatency( mode );
+    _JackEffects->updateJackLatency( mode );
 
 };
 

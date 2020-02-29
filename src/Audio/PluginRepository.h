@@ -30,7 +30,11 @@ class PluginRepository : public Util::Repository<T> {
          * Virtual class
          */
 
-        explicit PluginRepository() {};
+        explicit PluginRepository() :
+			Util::Repository<T>()
+		{
+		};
+
         ~PluginRepository() {};
 
 
@@ -49,8 +53,6 @@ class PluginRepository : public Util::Repository<T> {
                 Plugin * p = (*it);
 
                 std::cout << "\n" << (*it)->getName();
-
-                return nullptr;
 
                 if( strncmp( p->getID(), id, 500 ) == 0 ) {
 

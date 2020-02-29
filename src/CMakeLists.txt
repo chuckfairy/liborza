@@ -4,7 +4,9 @@ project(liborza-common CXX)
 
 # Main config
 
-set( ORZA_DATA_PATH "../data" )
+if( ORZA_DATA_PATH STREQUAL "" )
+    set( ORZA_DATA_PATH "../data" )
+endif()
 
 configure_file(Config/Config.h.in Config/Config.h)
 

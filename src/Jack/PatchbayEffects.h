@@ -23,7 +23,6 @@ namespace Jack {
  */
 
 class Server;
-class PluginRepository;
 
 
 /**
@@ -31,125 +30,103 @@ class PluginRepository;
  */
 
 class PatchbayEffects :
-    public Audio::Patchbay,
-    public StereoHostInterface,
-    public Audio::ControlInterface
+	public Audio::Patchbay,
+	public Audio::PatchbayEffects,
+	public StereoHostInterface
 {
 
-    public:
+	public:
 
-        explicit PatchbayEffects( Server * );
+		explicit PatchbayEffects( Server * );
 
-        explicit PatchbayEffects( jack_client_t * );
-
-
-        /**
-         * Getters
-         */
-
-        PatchbayEffectsOutput * getPatchbayOutput() {
-
-            return _Output;
-
-        };
+		explicit PatchbayEffects( jack_client_t * );
 
 
-        /**
-         * Get repo
-         */
+		/**
+		 * Getters
+		 */
 
-        PluginRepository * getRepo() {
+		PatchbayEffectsOutput * getPatchbayOutput() {
 
-            return _Repo;
+			return _Output;
 
-        };
-
-
-        /**
-         * Get control ports of active plugins
-         */
-
-        vector<Audio::Port*> getControlPorts();
+		};
 
 
-        /**
-         * Audio effects related
-         */
+		/**
+		 * Get control ports of active plugins
+		 */
 
-        void addEffect( Audio::Plugin * );
-
-        void removeEffect( Audio::Plugin * );
-
-        void pauseEffect( Audio::Plugin * );
-
-        void clearEffects();
+		vector<Audio::Port*> getControlPorts();
 
 
-        /**
-         * Effect connectors
-         */
+		/**
+		 * Audio effects related
+		 */
 
-        void connectEffectPorts();
+		void addEffect( Audio::Plugin * );
 
+		void removeEffect( Audio::Plugin * );
 
-        /**
-         * Connect via last port in chain
-         */
+		void pauseEffect( Audio::Plugin * );
 
-        void connectEffectLastPort( Audio::Plugin * );
-
-
-        /**
-         * Main jack updates
-         */
-
-        void updateJack( jack_nframes_t );
-
-        void updateJackBufferSize( jack_nframes_t );
-
-        void updateJackLatency( jack_latency_callback_mode_t );
+		void clearEffects();
 
 
-        /**
-         * Server set callbacks
-         */
+		/**
+		 * Effect connectors
+		 */
 
-        void setServerCallbacks();
-
-
-        /**
-         * Redirect overwrite over hostinterface
-         */
-
-        void redirectInput( jack_nframes_t );
+		void connectEffectPorts();
 
 
-    protected:
+		/**
+		 * Main jack updates
+		 */
 
-        /**
-         * Prefix virtual
-         */
+		void updateJack( jack_nframes_t );
 
-        const char * getPrefix() {
+		void updateJackBufferSize( jack_nframes_t );
 
-            return "effects";
-
-        };
+		void updateJackLatency( jack_latency_callback_mode_t );
 
 
-    private:
+		/**
+		 * Server set callbacks
+		 */
 
-        Server * _Server;
-
-        PatchbayEffectsOutput * _Output;
-
-        void redirectEffects( jack_nframes_t );
-
-        void disconnectEffectPorts();
-
-        PluginRepository * _Repo;
+		void setServerCallbacks();
 
 
+		/**
+		 * Redirect overwrite over hostinterface
+		 */
+
+		void redirectInput( jack_nframes_t );
+
+
+	protected:
+
+		/**
+		 * Prefix virtual
+		 */
+
+		const char * getPrefix() {
+
+			return "effects";
+
+		};
+
+
+	private:
+
+		Server * _Server;
+
+		PatchbayEffectsOutput * _Output;
+
+		void redirectEffects( jack_nframes_t );
+
+		void disconnectEffectPorts();
 
 };
 

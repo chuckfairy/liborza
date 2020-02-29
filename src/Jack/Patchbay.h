@@ -21,7 +21,6 @@ namespace Jack {
  */
 
 class Server;
-
 class PatchbayEffects;
 
 
@@ -151,13 +150,6 @@ class Patchbay :
         void setServerCallbacks();
 
 
-        /**
-         * Audio Effects
-         */
-
-        PatchbayEffects * getEffects();
-
-
     protected:
 
         Server * _Server;
@@ -176,7 +168,7 @@ class Patchbay :
          * Patchbay effects rack
          */
 
-        PatchbayEffects * _PatchbayEffects;
+        PatchbayEffects * _JackEffects;
 
 };
 
