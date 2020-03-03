@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <iostream>
 #include "Config/Frequency.h"
 #include <Midi/Note.h>
 
@@ -29,31 +30,35 @@ inline const float_t getBaseFrequency(
  * Get frequencies from a midi note
  */
 
-inline const float_t getFromNote(
-	const NoteNumber midiNote,
-	const float_t A4Frequency = DEFAULT_A4
-) {
+//inline float_t getFromNote(
+	//const NoteNumber midiNote,
+	//const float_t A4Frequency = DEFAULT_A4
+//) {
+	//const int midi = static_cast<int>(midiNote);
 
-	const float_t A0Frequency = getBaseFrequency( A4Frequency );
+	//return getFromNote( midi, A4Frequency );
 
-	float_t output = A0Frequency * pow( 2.0, ( midiNote - 21 ) / 12 );
-
-	return output;
-
-};
+//};
 
 /**
  * Get frequencies from a midi note int
  */
 
-inline const float_t getFromNote(
-	const int midiNote,
-	const float_t A4Frequency = DEFAULT_A4
+inline float_t getFromNote(
+	int midiNote,
+	float_t A4Frequency = DEFAULT_A4
 ) {
 
-	NoteNumber note = static_cast<NoteNumber>( midiNote );
+	const float_t A0Frequency = getBaseFrequency( A4Frequency );
 
-	return getFromNote( note, A4Frequency );
+	int midiWithMin =  midiNote - 21;
+	float power = powf( 2.0, (float)midiWithMin / 12 );
+
+	std::cout << "POWER " << power << "\n";
+
+	float_t output = A0Frequency * power;
+
+	return output;
 
 };
 

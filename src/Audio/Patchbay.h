@@ -7,44 +7,92 @@
 #include "Host.h"
 #include "Plugin.h"
 #include "PatchbayEffects.h"
+#include "ControlInterface.h"
+#include "PluginPortContainer.h"
+#include <Util/Vector.h>
 
 
 namespace Audio {
 
 
-class Patchbay : public Host {
+class Patchbay : public Host, public ControlInterface {
 
-    public:
+	public:
 
-        vector<Plugin*> getActivePlugins() {
+		//Virtuals
+		virtual vector<Audio::Plugin*> getAllPlugins() {
 
-            return _ActivePlugins;
+			vector<Audio::Plugin*> output;
 
-        };
+			Util::Vector::append( &output, _ActivePlugins );
+			Util::Vector::append( &output, _PatchbayEffects->getRepo()->getAll<Audio::Plugin>() );
 
-        /**
-         * Audio Effects
-         */
+			return output;
 
-        PatchbayEffects * getEffects() {
+		};
+
+		vector<Plugin*> getActivePlugins() {
+
+			return _ActivePlugins;
+
+		};
+
+		/**
+		 * Audio Effects
+		 */
+
+		PatchbayEffects * getEffects() {
 			return _PatchbayEffects;
 		}
 
+		vector<Audio::PluginPortContainer*> getPluginPortContainers() {
+			vector<Audio::Plugin*> plugins = getAllPlugins();
+			vector<Audio::Plugin*>::iterator it;
 
-    protected:
+			vector<Audio::PluginPortContainer*> output;
 
-        vector<Plugin*> _Plugins;
+			for( it = plugins.begin(); it != plugins.end(); ++ it ) {
 
-        vector<Plugin*> _ActivePlugins;
+				Audio::Plugin * p = (Audio::Plugin*) (*it);
 
-        vector<Plugin*> _ActiveEffects;
+				vector<Audio::Port*> ports = p->getPortsFromIndex( p->getControlPorts() );
+				vector<Audio::Port*>::iterator portsIt;
+
+				for( portsIt = ports.begin(); portsIt != ports.end(); ++ portsIt ) {
+
+					output.push_back(
+						new Audio::PluginPortContainer( p, (*portsIt) )
+					);
+
+				}
+
+			}
+
+			return output;
+
+		}
 
 
-        /**
-         * Patchbay effects rack
-         */
+	protected:
+		Patchbay() {}
 
-        PatchbayEffects * _PatchbayEffects;
+		Patchbay( PatchbayEffects * p ) :
+			_PatchbayEffects(p)
+		{};
+
+		~Patchbay() {}
+
+		vector<Plugin*> _Plugins;
+
+		vector<Plugin*> _ActivePlugins;
+
+		vector<Plugin*> _ActiveEffects;
+
+		/**
+		 * Patchbay effects rack
+		 */
+
+		PatchbayEffects * _PatchbayEffects;
 
 };
 

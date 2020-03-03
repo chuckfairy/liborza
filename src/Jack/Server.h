@@ -162,8 +162,6 @@ class Server : public Audio::Server {
 
 		Midi * getMidi();
 
-		Jack::Patchbay * getPatchbay();
-
 
 		/**
 		 * Port regsiter of started server

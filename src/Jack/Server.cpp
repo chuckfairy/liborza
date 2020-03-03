@@ -75,6 +75,8 @@ Server::Server() {
 
     _Host = new Jack::Patchbay( this );
 
+	_Patchbay = _Host;
+
 };
 
 
@@ -173,17 +175,6 @@ void Server::getPorts() {
 Midi * Server::getMidi() {
 
     return _Midi;
-
-};
-
-
-/**
- * Get patchbay
- */
-
-Jack::Patchbay * Server::getPatchbay() {
-
-    return _Host;
 
 };
 

@@ -30,7 +30,6 @@ class PatchbayEffects;
 
 class Patchbay :
     public Audio::Patchbay,
-    public Audio::ControlInterface,
     public StereoHostInterface
 {
 
@@ -102,21 +101,12 @@ class Patchbay :
 
         vector<Audio::Port*> getControlPorts();
 
-        vector<Audio::PluginPortContainer*> getPluginPortContainers();
-
 
         /**
          * @TODO move to instrument type patchbay effects
          */
 
         vector<Audio::Port*> getInstrumentControlPorts();
-
-
-        /**
-         * Get all active plugins fro effects
-         */
-
-        vector<Audio::Plugin*> getAllPlugins();
 
 
         /**

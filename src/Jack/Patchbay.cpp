@@ -32,22 +32,22 @@ namespace Jack {
  */
 
 Patchbay::Patchbay( Server * s ) :
-    StereoHostInterface( s->getJackClient() ),
-    _Server( s )
+	StereoHostInterface( s->getJackClient() ),
+	_Server( s ),
+	Audio::Patchbay( new PatchbayEffects( s ) )
 {
-	_PatchbayEffects = new PatchbayEffects( s );
 	_JackEffects = (PatchbayEffects*) _PatchbayEffects;
 
-    _Server->getAudio()->connectInputTo(
-        _JackEffects->getPatchbayOutput()->getOutputNameLeft(),
-        _JackEffects->getPatchbayOutput()->getOutputNameRight()
-    );
+	_Server->getAudio()->connectInputTo(
+		_JackEffects->getPatchbayOutput()->getOutputNameLeft(),
+		_JackEffects->getPatchbayOutput()->getOutputNameRight()
+	);
 
-    setServerCallbacks();
+	setServerCallbacks();
 
 
-    //@TODO determine place
-    run();
+	//@TODO determine place
+	run();
 
 };
 
@@ -58,13 +58,13 @@ Patchbay::Patchbay( Server * s ) :
 
 void Patchbay::run() {
 
-    setActive( true );
+	setActive( true );
 
 };
 
 void Patchbay::pause() {
 
-    setActive( false );
+	setActive( false );
 
 };
 
@@ -75,13 +75,13 @@ void Patchbay::pause() {
 
 void Patchbay::addPlugin( Audio::Plugin * p ) {
 
-    _ActivePlugins.push_back( p );
+	_ActivePlugins.push_back( p );
 
-    p->start();
+	p->start();
 
-    connectPluginPorts( p );
+	connectPluginPorts( p );
 
-    p->run();
+	p->run();
 
 };
 
@@ -92,13 +92,13 @@ void Patchbay::addPlugin( Audio::Plugin * p ) {
 
 void Patchbay::removePlugin( uint32_t index ) {
 
-    if( ! _ActivePlugins[ index ] ) { return; }
+	if( ! _ActivePlugins[ index ] ) { return; }
 
-    Audio::Plugin * p = _ActivePlugins[ index ];
+	Audio::Plugin * p = _ActivePlugins[ index ];
 
-    _ActivePlugins.erase( _ActivePlugins.begin() + index );
+	_ActivePlugins.erase( _ActivePlugins.begin() + index );
 
-    p->stop();
+	p->stop();
 
 };
 
@@ -109,13 +109,13 @@ void Patchbay::removePlugin( uint32_t index ) {
 
 void Patchbay::clearPlugins() {
 
-    if( _ActivePlugins.empty() ) { return; }
+	if( _ActivePlugins.empty() ) { return; }
 
-    while( ! _ActivePlugins.empty() ) {
+	while( ! _ActivePlugins.empty() ) {
 
-        removePlugin( 0 );
+		removePlugin( 0 );
 
-    }
+	}
 
 }
 
@@ -126,46 +126,13 @@ void Patchbay::clearPlugins() {
 
 vector<Audio::Port*> Patchbay::getControlPorts() {
 
-    vector<Audio::Port*> ports;
+	vector<Audio::Port*> ports;
 
-    Util::Vector::append( &ports, getInstrumentControlPorts() );
+	Util::Vector::append( &ports, getInstrumentControlPorts() );
 
-    Util::Vector::append( &ports, _JackEffects->getControlPorts() );
+	Util::Vector::append( &ports, _JackEffects->getControlPorts() );
 
-    return ports;
-
-};
-
-
-/**
- * char
- */
-
-vector<Audio::PluginPortContainer*> Patchbay::getPluginPortContainers() {
-
-    vector<Audio::Plugin*> plugins = getAllPlugins();
-    vector<Audio::Plugin*>::iterator it;
-
-    vector<Audio::PluginPortContainer*> output;
-
-    for( it = plugins.begin(); it != plugins.end(); ++ it ) {
-
-        Audio::Plugin * p = (Audio::Plugin*) (*it);
-
-        vector<Audio::Port*> ports = p->getPortsFromIndex( p->getControlPorts() );
-        vector<Audio::Port*>::iterator portsIt;
-
-        for( portsIt = ports.begin(); portsIt != ports.end(); ++ portsIt ) {
-
-            output.push_back(
-                new Audio::PluginPortContainer( p, (*portsIt) )
-            );
-
-        }
-
-    }
-
-    return output;
+	return ports;
 
 };
 
@@ -176,39 +143,24 @@ vector<Audio::PluginPortContainer*> Patchbay::getPluginPortContainers() {
 
 vector<Audio::Port*> Patchbay::getInstrumentControlPorts() {
 
-    vector<Audio::Port*> ports;
+	vector<Audio::Port*> ports;
 
-    vector<Audio::Plugin*>::iterator it;
+	vector<Audio::Plugin*>::iterator it;
 
-    for( it = _ActivePlugins.begin(); it != _ActivePlugins.end(); ++ it ) {
+	for( it = _ActivePlugins.begin(); it != _ActivePlugins.end(); ++ it ) {
 
-        Plugin * p = (Plugin*) (*it);
+		Plugin * p = (Plugin*) (*it);
 
-        vector<Audio::Port*> pluginPorts = p->getPortsFromIndex( p->getControlPorts() );
+		vector<Audio::Port*> pluginPorts = p->getPortsFromIndex( p->getControlPorts() );
 
-        Util::Vector::append( &ports, pluginPorts );
+		Util::Vector::append( &ports, pluginPorts );
 
-    };
+	};
 
-    return ports;
-
-};
-
-
-/**
- * Get all active plugins fro effects
- */
-
-vector<Audio::Plugin*> Patchbay::getAllPlugins() {
-
-    vector<Audio::Plugin*> output;
-
-    Util::Vector::append( &output, _ActivePlugins );
-    Util::Vector::append( &output, _JackEffects->getRepo()->getAll<Audio::Plugin>() );
-
-    return output;
+	return ports;
 
 };
+
 
 /**
  * Plugin port connector to server audio
@@ -216,8 +168,8 @@ vector<Audio::Plugin*> Patchbay::getAllPlugins() {
 
 void Patchbay::connectPluginPorts( Audio::Plugin * p ) {
 
-    connectPluginAudioPorts( p );
-    connectPluginMidiPorts( p );
+	connectPluginAudioPorts( p );
+	connectPluginMidiPorts( p );
 
 };
 
@@ -230,41 +182,41 @@ void Patchbay::connectPluginPorts( Audio::Plugin * p ) {
 
 void Patchbay::connectPluginAudioPorts( Audio::Plugin * p ) {
 
-    //Get outputs
+	//Get outputs
 
-    vector<long> * ports = p->getOutputPorts();
+	vector<long> * ports = p->getOutputPorts();
 
-    if( ports->empty() ) { return; }
+	if( ports->empty() ) { return; }
 
 
-    //Stereo check
+	//Stereo check
 
-    if( ports->size() > 1 ) {
+	if( ports->size() > 1 ) {
 
-        Jack::Port * portLeft = (Jack::Port*) p->getPort(
-            (*ports)[ 0 ]
-        );
+		Jack::Port * portLeft = (Jack::Port*) p->getPort(
+			(*ports)[ 0 ]
+		);
 
-        Jack::Port * portRight = (Jack::Port*) p->getPort(
-            (*ports)[ 1 ]
-        );
+		Jack::Port * portRight = (Jack::Port*) p->getPort(
+			(*ports)[ 1 ]
+		);
 
-        _JackEffects->connectInputTo(
-            jack_port_name( portLeft->jack_port ),
-            jack_port_name( portRight->jack_port )
-        );
+		_JackEffects->connectInputTo(
+			jack_port_name( portLeft->jack_port ),
+			jack_port_name( portRight->jack_port )
+		);
 
-    } else {
+	} else {
 
-        Jack::Port * portMono = (Jack::Port*) p->getPort(
-            (*ports)[ 0 ]
-        );
+		Jack::Port * portMono = (Jack::Port*) p->getPort(
+			(*ports)[ 0 ]
+		);
 
-        _JackEffects->connectInputTo(
-            jack_port_name( portMono->jack_port )
-        );
+		_JackEffects->connectInputTo(
+			jack_port_name( portMono->jack_port )
+		);
 
-    }
+	}
 
 };
 
@@ -275,30 +227,30 @@ void Patchbay::connectPluginAudioPorts( Audio::Plugin * p ) {
 
 void Patchbay::connectPluginMidiPorts( Audio::Plugin * p ) {
 
-    vector<long> * ports = p->getMidiPorts();
+	vector<long> * ports = p->getMidiPorts();
 
-    if( ports->empty() ) { return; }
+	if( ports->empty() ) { return; }
 
 
-    //Connect to all midi inputs
+	//Connect to all midi inputs
 
-    Jack::Midi * midi = _Server->getMidi();
+	Jack::Midi * midi = _Server->getMidi();
 
-    vector<long>::iterator it;
+	vector<long>::iterator it;
 
-    for( it = ports->begin(); it != ports->end(); ++ it ) {
+	for( it = ports->begin(); it != ports->end(); ++ it ) {
 
-        Port * port = (Port*) p->getPort( *it );
+		Port * port = (Port*) p->getPort( *it );
 
-        if( ! port->jack_port ) { continue; }
+		if( ! port->jack_port ) { continue; }
 
-        if( port->flow == Audio::FLOW_INPUT ) {
+		if( port->flow == Audio::FLOW_INPUT ) {
 
-            midi->addInput( port->jack_port );
+			midi->addInput( port->jack_port );
 
-        }
+		}
 
-    }
+	}
 
 };
 
@@ -312,23 +264,23 @@ void Patchbay::connectPluginMidiPorts( Audio::Plugin * p ) {
 
 void Patchbay::setServerCallbacks() {
 
-    if( ! _Server ) {
+	if( ! _Server ) {
 
-        throw std::runtime_error( "No server set" );
+		throw std::runtime_error( "No server set" );
 
-    }
+	}
 
-    Util::Event * e = new UpdateEvent( this );
+	Util::Event * e = new UpdateEvent( this );
 
-    Util::Event * latency = new LatencyEvent( this );
+	Util::Event * latency = new LatencyEvent( this );
 
-    Util::Event * bufferEvent = new BufferEvent( this );
+	Util::Event * bufferEvent = new BufferEvent( this );
 
-    _Server->on( Jack::Server::UPDATE_EVENT, e );
+	_Server->on( Jack::Server::UPDATE_EVENT, e );
 
-    _Server->on( Jack::Server::LATENCY_EVENT, latency );
+	_Server->on( Jack::Server::LATENCY_EVENT, latency );
 
-    _Server->on( Jack::Server::BUFFER_SIZE_EVENT, bufferEvent );
+	_Server->on( Jack::Server::BUFFER_SIZE_EVENT, bufferEvent );
 
 };
 
@@ -339,33 +291,33 @@ void Patchbay::setServerCallbacks() {
 
 void Patchbay::updateJack( jack_nframes_t nframes ) {
 
-    //@TODO maybe move
+	//@TODO maybe move
 
-    _Server->getMidi()->update( nframes );
-
-
-    //Check if even active
-
-    if( ! isActive() ) { return; }
+	_Server->getMidi()->update( nframes );
 
 
-    //@TODO move to more like patchbay effects
+	//Check if even active
 
-    vector<Audio::Plugin*>::iterator it;
+	if( ! isActive() ) { return; }
 
-    for( it = _ActivePlugins.begin(); it != _ActivePlugins.end(); ++ it ) {
 
-        Plugin * p = (Plugin*) (*it);
+	//@TODO move to more like patchbay effects
 
-        if( p->isActive() ) {
+	vector<Audio::Plugin*>::iterator it;
 
-            p->updateJack( nframes );
+	for( it = _ActivePlugins.begin(); it != _ActivePlugins.end(); ++ it ) {
 
-        }
+		Plugin * p = (Plugin*) (*it);
 
-    }
+		if( p->isActive() ) {
 
-    _JackEffects->redirectInput( nframes );
+			p->updateJack( nframes );
+
+		}
+
+	}
+
+	_JackEffects->redirectInput( nframes );
 
 };
 
@@ -376,9 +328,9 @@ void Patchbay::updateJack( jack_nframes_t nframes ) {
 
 void Patchbay::updateJack( void * frameVoid ) {
 
-    return updateJack(
-        (jack_nframes_t) (uintptr_t) frameVoid
-    );
+	return updateJack(
+		(jack_nframes_t) (uintptr_t) frameVoid
+	);
 
 };
 
@@ -389,25 +341,25 @@ void Patchbay::updateJack( void * frameVoid ) {
 
 void Patchbay::updateJackBufferSize( void * bufferPtr ) {
 
-    std::cout << "BUFFER SIZE\n";
+	std::cout << "BUFFER SIZE\n";
 
-    jack_nframes_t frames = (jack_nframes_t) (uintptr_t) bufferPtr;
+	jack_nframes_t frames = (jack_nframes_t) (uintptr_t) bufferPtr;
 
-    vector<Audio::Plugin*>::iterator it;
+	vector<Audio::Plugin*>::iterator it;
 
-    for( it = _ActivePlugins.begin(); it != _ActivePlugins.end(); ++ it ) {
+	for( it = _ActivePlugins.begin(); it != _ActivePlugins.end(); ++ it ) {
 
-        Plugin * p = (Plugin*) (*it);
+		Plugin * p = (Plugin*) (*it);
 
-        if( p->isActive() ) {
+		if( p->isActive() ) {
 
-            p->updateJackBufferSize( frames );
+			p->updateJackBufferSize( frames );
 
-        }
+		}
 
-    }
+	}
 
-    _JackEffects->updateJackBufferSize( frames );
+	_JackEffects->updateJackBufferSize( frames );
 
 };
 
@@ -418,23 +370,23 @@ void Patchbay::updateJackBufferSize( void * bufferPtr ) {
 
 void Patchbay::updateJackLatency( void * modePtr ) {
 
-    jack_latency_callback_mode_t mode = (jack_latency_callback_mode_t) (uintptr_t) modePtr;
+	jack_latency_callback_mode_t mode = (jack_latency_callback_mode_t) (uintptr_t) modePtr;
 
-    vector<Audio::Plugin*>::iterator it;
+	vector<Audio::Plugin*>::iterator it;
 
-    for( it = _ActivePlugins.begin(); it != _ActivePlugins.end(); ++ it ) {
+	for( it = _ActivePlugins.begin(); it != _ActivePlugins.end(); ++ it ) {
 
-        Plugin * p = (Plugin*) (*it);
+		Plugin * p = (Plugin*) (*it);
 
-        if( p->isActive() ) {
+		if( p->isActive() ) {
 
-            p->updateJackLatency( mode );
+			p->updateJackLatency( mode );
 
-        }
+		}
 
-    }
+	}
 
-    _JackEffects->updateJackLatency( mode );
+	_JackEffects->updateJackLatency( mode );
 
 };
 

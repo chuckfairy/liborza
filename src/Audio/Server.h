@@ -6,28 +6,34 @@
 
 #include <Util/Dispatcher.h>
 #include "ControlInterface.h"
-
+#include "Patchbay.h"
 
 namespace Audio {
 
 
 class Server : public Util::Dispatcher, public ControlInterface {
 
-    protected:
+	public:
 
-        Server() {};
-        ~Server() {};
+		virtual void start() {};
 
-        const char * _name;
-        const char * _clientName;
+		virtual void stop() {};
 
-    public:
+		virtual bool connect() { return false; };
 
-        virtual void start() {};
+		Patchbay * getPatchbay() {
+			return _Patchbay;
+		};
 
-        virtual void stop() {};
+	protected:
 
-        virtual bool connect() { return false; };
+		Server() {};
+		~Server() {};
+
+		const char * _name;
+		const char * _clientName;
+
+		Patchbay * _Patchbay;
 
 };
 
