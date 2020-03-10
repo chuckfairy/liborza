@@ -25,6 +25,13 @@ inline const float_t getBaseFrequency(
 
 };
 
+inline float_t getFrequencyDistance(
+	float_t frequency,
+	float_t other
+) {
+	return abs(frequency - other);
+}
+
 
 /**
  * Get frequencies from a midi note
@@ -54,12 +61,35 @@ inline float_t getFromNote(
 	int midiWithMin =  midiNote - 21;
 	float power = powf( 2.0, (float)midiWithMin / 12 );
 
-	std::cout << "POWER " << power << "\n";
-
 	float_t output = A0Frequency * power;
 
 	return output;
 
 };
+
+inline float_t getNoteFromFrequency(
+	float_t frequency,
+	float_t A4Frequency = DEFAULT_A4
+) {
+	int current = 0;
+	float_t distance = 100 * 100;
+
+	for( int i = 21; i < 157; ++i ) {
+		float_t note = getFromNote(i);
+
+		float_t thisDistance = getFrequencyDistance(frequency, note);
+
+		if( thisDistance <= distance ) {
+			current = i;
+			distance = thisDistance;
+		}
+
+		if( note >= frequency ) {
+			break;
+		}
+	}
+
+	return current - 21;
+}
 
 }; }; };
