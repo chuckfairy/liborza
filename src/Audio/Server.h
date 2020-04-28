@@ -8,6 +8,8 @@
 #include "ControlInterface.h"
 #include "Patchbay.h"
 
+#include "MidiHost.h"
+
 namespace Audio {
 
 
@@ -20,6 +22,8 @@ class Server : public Util::Dispatcher, public ControlInterface {
 		virtual void stop() {};
 
 		virtual bool connect() { return false; };
+
+		virtual MidiHost * getMidiHost() {};
 
 		Patchbay * getPatchbay() {
 			return _Patchbay;

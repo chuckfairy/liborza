@@ -23,6 +23,7 @@ configure_file(Config/Config.h.in Config/Config.h)
 
 include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
+	"../"
 )
 
 

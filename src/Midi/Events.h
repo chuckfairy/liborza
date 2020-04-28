@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <inttypes.h>
 
 
 namespace Orza { namespace Midi {
@@ -14,10 +15,10 @@ namespace Orza { namespace Midi {
  * Event types
  */
 enum EventType {
-    EVENT_NOTE_ON,
-    EVENT_NOTE_OFF,
-    EVENT_CONTROL_CHANGE,
-    EVENT_UNKNOWN
+	EVENT_NOTE_ON,
+	EVENT_NOTE_OFF,
+	EVENT_CONTROL_CHANGE,
+	EVENT_UNKNOWN
 };
 
 
@@ -27,36 +28,38 @@ enum EventType {
 
 struct Event {
 
-    EventType type = EVENT_UNKNOWN;
+	EventType type = EVENT_UNKNOWN;
 
-    int channel = 1;
+	int channel = 1;
 
-    int pitch = 0;
+	int pitch = 0;
 
-    int velocity = 0;
+	int velocity = 0;
 
-    int controlNumber = 0;
+	int controlNumber = 0;
 
-    int controlValue = 0;
+	int controlValue = 0;
+
+	uint32_t frames = 0;
 
 
-    /**
-     * Type name getter
-     * @TODO Make better
-     */
+	/**
+	 * Type name getter
+	 * @TODO Make better
+	 */
 
-    const char * getTypeName() {
+	const char * getTypeName() {
 
-        const char * EventTypeNames[] = {
-            "Note On",
-            "Note Off",
-            "Control Change",
-            "Unknnown"
-        };
+		const char * EventTypeNames[] = {
+			"Note On",
+			"Note Off",
+			"Control Change",
+			"Unknnown"
+		};
 
-        return EventTypeNames[ type ];
+		return EventTypeNames[ type ];
 
-    };
+	};
 
 };
 

@@ -4,6 +4,8 @@
 #include "Midi.h"
 #include "Server.h"
 
+#include <Midi/Events.h>
+
 using Orza::Midi::ControlNumber;
 using Orza::Midi::CONTROL_NUMBER_MIN;
 using Orza::Midi::CONTROL_NUMBER_MAX;
@@ -28,7 +30,15 @@ Midi::Midi( Server * s ) : Host( s ) {
 };
 
 
+/**
+ * Consts
+ */
+
 const char * Midi::ALL_EVENTS = "all";
+
+const int Midi::EVENT_CONTROL_CHANGE = 0xb0;
+const int Midi::EVENT_NOTE_ON = 0x90;
+const int Midi::EVENT_NOTE_OFF = 0x80;
 
 
 /**
@@ -210,6 +220,44 @@ void Midi::updateEventPort( jack_nframes_t nframes, jack_port_t * port ) {
 
 };
 
+
+/**
+ * Send orza midi event to jack
+ */
+void Midi::sendEvent( Audio::Port * port, Orza::Midi::Event * event ) {
+
+	Jack::Port * jackPort = (Jack::Port*) port;
+
+	//Create buffer
+	unsigned char * buffer = jack_midi_event_reserve(
+		jackPort->jack_port,
+		event->frames,
+		3
+	);
+
+	switch (event->type) {
+		case Orza::Midi::EVENT_NOTE_ON:
+			buffer[2] = event->velocity;
+			buffer[1] = event->pitch;
+			buffer[0] = EVENT_NOTE_ON;
+			break;
+
+		case Orza::Midi::EVENT_NOTE_OFF:
+			buffer[2] = event->velocity;
+			buffer[1] = event->pitch;
+			buffer[0] = EVENT_NOTE_OFF;
+			break;
+
+		case Orza::Midi::EVENT_CONTROL_CHANGE:
+			buffer[2] = event->controlValue;
+			buffer[1] = event->controlNumber;
+			buffer[0] = EVENT_CONTROL_CHANGE;
+			break;
+
+		default:
+			break;
+	}
+};
 
 /**
  * Handle event

@@ -178,6 +178,13 @@ Midi * Server::getMidi() {
 
 };
 
+Audio::MidiHost * Server::getMidiHost() {
+
+	return _Midi;
+
+};
+
+
 
 /**
  * Jack server proccess callback

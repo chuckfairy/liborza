@@ -12,6 +12,8 @@
 #include <Util/Dispatcher.h>
 #include <Midi/Control.h>
 
+#include <Audio/MidiHost.h>
+
 #include "Port.h"
 #include "MidiEvent.h"
 #include "Host.h"
@@ -43,13 +45,17 @@ struct MidiControlPort : public ControlPort<Port> {
  * Main class
  */
 
-class Midi : public Host, public Util::Dispatcher {
+class Midi : public Host, public Util::Dispatcher, public Audio::MidiHost {
 
     public:
 
         explicit Midi( Server * );
 
         static const char * ALL_EVENTS;
+
+        static const int EVENT_CONTROL_CHANGE;
+        static const int EVENT_NOTE_ON;
+        static const int EVENT_NOTE_OFF;
 
         /**
          * Main external port getter
@@ -80,6 +86,8 @@ class Midi : public Host, public Util::Dispatcher {
         void updateEvents( jack_nframes_t );
 
         void updateEventPort( jack_nframes_t, jack_port_t * );
+
+		void sendEvent( Audio::Port * port, Orza::Midi::Event * );
 
 
     private:

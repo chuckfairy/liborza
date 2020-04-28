@@ -162,6 +162,8 @@ class Server : public Audio::Server {
 
 		Midi * getMidi();
 
+		Audio::MidiHost * getMidiHost();
+
 
 		/**
 		 * Port regsiter of started server
