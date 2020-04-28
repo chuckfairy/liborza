@@ -3,6 +3,7 @@
  *
  */
 #pragma once
+#include <jack/jack.h>
 
 #include <Util/Dispatcher.h>
 
@@ -21,23 +22,28 @@ class Patchbay;
  *
  */
 
+template<typename T>
 class UpdateEvent : public Util::Event {
 
-    private:
 
-        Patchbay * _Patchbay;
+	public:
+
+		/**
+		 * Construct
+		 */
+
+		UpdateEvent( T * p ) : _Host( p ) {}
+
+		void run( void * o ) {
+			_Host->updateJack(
+				(jack_nframes_t) (uintptr_t) (jack_nframes_t * ) o
+			);
+		}
 
 
-    public:
+	private:
 
-        /**
-         * Construct
-         */
-
-        UpdateEvent( Patchbay * p ) : _Patchbay( p ) {}
-
-        void run( void * o );
-
+		T * _Host;
 };
 
 };

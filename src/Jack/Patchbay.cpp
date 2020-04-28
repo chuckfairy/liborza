@@ -270,7 +270,7 @@ void Patchbay::setServerCallbacks() {
 
 	}
 
-	Util::Event * e = new UpdateEvent( this );
+	Util::Event * e = new UpdateEvent<Patchbay>( this );
 
 	Util::Event * latency = new LatencyEvent( this );
 

@@ -22,7 +22,12 @@ class MidiHost {
 
 		virtual void addOutput( Port * ) {};
 
-		virtual void sendEvent( Audio::Port * port, Orza::Midi::Event * ) {};
+		virtual void sendEvent( Port * port, Orza::Midi::Event * ) {};
+
+		virtual Port * createInputPort(const char * name) {};
+		virtual Port * createOutputPort(const char * name) {};
+
+		virtual void clearPort(Port *) {};
 };
 
 };

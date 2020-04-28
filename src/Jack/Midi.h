@@ -89,6 +89,12 @@ class Midi : public Host, public Util::Dispatcher, public Audio::MidiHost {
 
 		void sendEvent( Audio::Port * port, Orza::Midi::Event * );
 
+		Audio::Port * createInputPort(const char * name);
+		Audio::Port * createOutputPort(const char * name);
+		Audio::Port * createPort(const char * name);
+
+		void clearPort(Audio::Port *);
+
 
     private:
 

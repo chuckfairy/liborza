@@ -3,6 +3,7 @@
  */
 #include "Midi.h"
 #include "Server.h"
+#include "Port.h"
 
 #include <Midi/Events.h>
 
@@ -228,9 +229,11 @@ void Midi::sendEvent( Audio::Port * port, Orza::Midi::Event * event ) {
 
 	Jack::Port * jackPort = (Jack::Port*) port;
 
+	void* port_buf = jack_port_get_buffer(jackPort->jack_port, event->frames);
+
 	//Create buffer
 	unsigned char * buffer = jack_midi_event_reserve(
-		jackPort->jack_port,
+		port_buf,
 		event->frames,
 		3
 	);
@@ -258,6 +261,60 @@ void Midi::sendEvent( Audio::Port * port, Orza::Midi::Event * event ) {
 			break;
 	}
 };
+
+
+/**
+ * Port creation
+ */
+
+Audio::Port * Midi::createInputPort(const char * name) {
+	Port * port = (Port*) createPort(name);
+
+	port->jack_port = jack_port_register(
+		_jackClient,
+		name,
+		JACK_DEFAULT_MIDI_TYPE,
+		JackPortIsInput,
+		0
+	);
+
+	return port;
+};
+
+Audio::Port * Midi::createOutputPort(const char * name) {
+	Port * port = (Port*) createPort(name);
+
+	port->jack_port = jack_port_register(
+		_jackClient,
+		name,
+		JACK_DEFAULT_MIDI_TYPE,
+		JackPortIsOutput,
+		0
+	);
+
+	return port;
+};
+
+
+Audio::Port * Midi::createPort(const char * name) {
+	Port * port = new Port();
+
+	port->isAudio = false;
+	port->isInput = true;
+	port->nameString = name;
+	port->name = port->nameString.c_str();
+
+	return port;
+
+};
+
+void Midi::clearPort(Audio::Port * port) {
+	Jack::Port * jackPort = (Jack::Port*) port;
+	void* port_buf = jack_port_get_buffer(jackPort->jack_port, 1);
+	jack_midi_clear_buffer(port_buf);
+}
+
+
 
 /**
  * Handle event
