@@ -105,6 +105,25 @@ class PatchbayEffects :
 		void redirectInput( jack_nframes_t );
 
 
+		/**
+		 * Virtuals
+		 */
+		bool connectInputTo( const char * out) {
+			return StereoHostInterface::connectInputTo(out);
+		};
+
+		bool connectInputTo( const char * out1, const char * out2) {
+			return StereoHostInterface::connectInputTo(out1, out2);
+		};
+
+		bool connectOutputTo( const char * out) {
+			return StereoHostInterface::connectOutputTo(out);
+		};
+
+		bool connectOutputTo( const char * out1, const char * out2) {
+			return StereoHostInterface::connectOutputTo(out1, out2);
+		};
+
 	protected:
 
 		/**

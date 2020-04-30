@@ -63,6 +63,14 @@ class PatchbayEffects :
 
 		virtual void connectEffectPorts() {};
 
+		virtual bool connectInputTo( const char * ) {};
+
+		virtual bool connectInputTo( const char *, const char * ) {};
+
+		virtual bool connectOutputTo( const char * ) {};
+
+		virtual bool connectOutputTo( const char *, const char * ) {};
+
 
 	protected:
 

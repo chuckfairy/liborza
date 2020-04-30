@@ -37,6 +37,10 @@ class Patchbay : public Host, public ControlInterface {
 
 		};
 
+		virtual void addPlugin(Plugin *) {};
+
+		virtual void clearPlugins() {};
+
 		/**
 		 * Audio Effects
 		 */
