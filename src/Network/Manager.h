@@ -30,7 +30,7 @@ class Manager {
 
 		vector<string> getInterfaces(bool rescan = false);
 
-		void setInterface(const char * interface) {
+		void setInterface(string interface) {
 			_interface = interface;
 		};
 
@@ -38,7 +38,7 @@ class Manager {
 
 		static vector<string> INTERFACES;
 
-		const char * _interface = "wlan0";
+		string _interface = string("wlan0");
 
 		static void handleInterfaceProcess(
 			int skfd,
