@@ -402,8 +402,10 @@ void Plugin::start() {
 
 	}
 
-
     //@ENDTODO
+
+
+	//Worker setup
 
 	LV2_State_Make_Path make_path = { this, Plugin::LV2MakePath };
 	make_path_feature.data = &make_path;

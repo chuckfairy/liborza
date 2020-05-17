@@ -18,20 +18,34 @@ namespace Orza { namespace Network {
 
 class Manager {
 
-    public:
+	public:
 
-        Manager();
+		Manager();
 
-        vector<Network*> getNetworks();
+		vector<Network*> getNetworks();
 
-        vector<string> getNetworkSSIDs();
+		vector<string> getNetworkSSIDs();
 
-        void connect( string ssid, string pass );
+		void connect( string ssid, string pass );
 
+		vector<string> getInterfaces(bool rescan = false);
 
-    private:
+		void setInterface(const char * interface) {
+			_interface = interface;
+		};
 
-        const char * _interface = "wlan0";
+	private:
+
+		static vector<string> INTERFACES;
+
+		const char * _interface = "wlan0";
+
+		static void handleInterfaceProcess(
+			int skfd,
+			char * ifname,
+			char * args[],
+			int count
+		);
 
 };
 
