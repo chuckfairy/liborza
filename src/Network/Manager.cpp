@@ -40,7 +40,8 @@ vector<Network*> Manager::getNetworks() {
 	sock = iw_sockets_open();
 
 	/* Get some metadata to use for scanning */
-	std::cout << "CONNECTING TO " << _interface << "\n";
+	std::cout << "NETWORKS FOR " << _interface << "\n";
+
 	if (iw_get_range_info(sock, _interface.c_str(), &range) < 0) {
 		throw std::runtime_error(
 			"Error during iw_get_range_info. Aborting."
