@@ -34,6 +34,8 @@ class Manager {
 			_interface = interface;
 		};
 
+		string getIP();
+
 	private:
 
 		static vector<string> INTERFACES;

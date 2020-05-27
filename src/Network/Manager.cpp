@@ -8,7 +8,12 @@
 #include <string>
 #include <vector>
 
+//Network libs
 #include <iwlib.h>
+
+#include <netdb.h>
+#include <sys/types.h>
+#include <ifaddrs.h>
 
 #include "Manager.h"
 
@@ -143,6 +148,60 @@ vector<string> Manager::getNetworkSSIDs() {
 
 	return out;
 
+};
+
+string Manager::getIP() {
+
+	struct ifaddrs *ifaddr, *ifa;
+
+	int family, s;
+	char host[NI_MAXHOST];
+
+	if (getifaddrs(&ifaddr) == -1) {
+		throw std::runtime_error("Could not read ifaddrs");
+		return "";
+	}
+
+	//ifap[0]->ifa_addr->sa_data;
+	for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
+		//Check valid
+		if (ifa->ifa_addr == NULL) {
+			continue;
+		}
+
+		std::cout << ifa->ifa_name << "\n";
+
+		//Check right interface
+		string ifname(ifa->ifa_name);
+		if (_interface != ifname) {
+			continue;
+		}
+
+		family = ifa->ifa_addr->sa_family;
+
+		if (family != AF_INET && family != AF_INET6) {
+			continue;
+		}
+
+		s = getnameinfo(ifa->ifa_addr,
+			(family == AF_INET) ? sizeof(struct sockaddr_in) :
+			sizeof(struct sockaddr_in6),
+			host, NI_MAXHOST,
+			NULL, 0, NI_NUMERICHOST
+		);
+
+		if (s != 0) {
+			//printf("getnameinfo() failed: %s\n", gai_strerror(s));
+			throw std::runtime_error("getnameinfo() failed");
+		}
+
+		freeifaddrs(ifaddr);
+		return (string)host;
+	}
+
+	freeifaddrs(ifaddr);
+	return "";
+	//netent net = getnetbyname(_interface);
 };
 
 
