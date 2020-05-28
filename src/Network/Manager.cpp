@@ -169,8 +169,6 @@ string Manager::getIP() {
 			continue;
 		}
 
-		std::cout << ifa->ifa_name << "\n";
-
 		//Check right interface
 		string ifname(ifa->ifa_name);
 		if (_interface != ifname) {
