@@ -242,7 +242,8 @@ void Host::disconnectOutputs() {
 
 vector<Port> Host::getPortsByType(
     enum JackPortFlags PORT_FLAG,
-    const char * AUDIO_TYPE
+    const char * AUDIO_TYPE,
+	bool checkInternal
 ) {
 
     vector<Port> ports;
@@ -265,7 +266,7 @@ vector<Port> Host::getPortsByType(
 
         //Check if interal
 
-        if( isInternalPort( portName ) ) {
+        if( checkInternal && isInternalPort( portName ) ) {
 
             ++iClientPort;
 

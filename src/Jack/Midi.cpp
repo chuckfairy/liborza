@@ -48,7 +48,7 @@ const int Midi::EVENT_NOTE_OFF = 0x80;
 
 vector<Port> Midi::getMidiPorts() {
 
-    return _Server->getAudio()->getPortsByType( JackPortIsOutput, JACK_DEFAULT_MIDI_TYPE );
+    return _Server->getAudio()->getPortsByType( JackPortIsOutput, JACK_DEFAULT_MIDI_TYPE, false );
 
 };
 

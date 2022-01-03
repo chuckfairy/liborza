@@ -66,7 +66,11 @@ class Host :
          * Get specific ports
          */
 
-        vector<Port> getPortsByType( enum JackPortFlags, const char * );
+        vector<Port> getPortsByType(
+			enum JackPortFlags,
+			const char *,
+			bool checkInternal = true
+		);
 
 
         /**
