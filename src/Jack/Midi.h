@@ -70,6 +70,10 @@ class Midi : public Host, public Util::Dispatcher, public Audio::MidiHost {
          * Main port setters
          */
 
+        void addInput( Audio::Port * );
+
+        void addOutput( Audio::Port * );
+
         void addInput( jack_port_t * );
 
         void addOutput( jack_port_t * );
@@ -94,6 +98,7 @@ class Midi : public Host, public Util::Dispatcher, public Audio::MidiHost {
 		Audio::Port * createPort(const char * name);
 
 		void clearPort(Audio::Port *);
+		void clearPort(jack_port_t *);
 
 
     private:

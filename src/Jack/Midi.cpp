@@ -94,6 +94,18 @@ vector<MidiControlPort*> Midi::getMidiControlPorts() {
  * Main port adders
  */
 
+void Midi::addInput( Audio::Port * port ) {
+
+	addInput(((Port*)port)->jack_port);
+
+};
+
+void Midi::addOutput( Audio::Port * port ) {
+
+	addOutput(((Port*)port)->jack_port);
+
+};
+
 void Midi::addInput( jack_port_t * port ) {
 
     _inputPorts.push_back( port );
@@ -219,6 +231,8 @@ void Midi::updateEventPort( jack_nframes_t nframes, jack_port_t * port ) {
 
     }
 
+	clearPort(port);
+
 };
 
 
@@ -310,9 +324,14 @@ Audio::Port * Midi::createPort(const char * name) {
 
 void Midi::clearPort(Audio::Port * port) {
 	Jack::Port * jackPort = (Jack::Port*) port;
-	void* port_buf = jack_port_get_buffer(jackPort->jack_port, 1);
-	jack_midi_clear_buffer(port_buf);
+	clearPort(jackPort->jack_port);
 }
+
+void Midi::clearPort(jack_port_t * port) {
+	void* port_buf = jack_port_get_buffer(port, 1);
+	jack_midi_clear_buffer(port_buf);
+};
+
 
 
 
