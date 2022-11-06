@@ -80,7 +80,7 @@ class Dispatcher {
 
 			vector<Event*> * mapEvents = _events[ event ];
 
-			for( int i = 0; i < mapEvents->size(); ++ i ) {
+			for( long unsigned int i = 0; i < mapEvents->size(); ++ i ) {
 
 				mapEvents->at( i )->run( data );
 

@@ -17,10 +17,10 @@ namespace Jack {
  */
 
 PatchbayEffects::PatchbayEffects( Server * server ) :
+	::Audio::PatchbayEffects(),
 	StereoHostInterface( server->getJackClient() ),
 	_Server( server ),
-	_Output( new PatchbayEffectsOutput( server->getJackClient() ) ),
-	::Audio::PatchbayEffects()
+	_Output( new PatchbayEffectsOutput( server->getJackClient() ) )
 {
 
 	createPorts();
@@ -57,9 +57,9 @@ void PatchbayEffects::addEffect( Audio::Plugin * p ) {
 
 void PatchbayEffects::removeEffect( Audio::Plugin * p ) {
 
-	_Repo->remove( (Plugin*) p );
-
 	p->stop();
+
+	_Repo->remove( (Plugin*) p );
 
 	connectEffectPorts();
 
